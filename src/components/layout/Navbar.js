@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
-import { clearStorage } from "../../common/session";
+import { clearCurrentProfile } from "../../actions/profileActions";
+import PropTypes from "prop-types";
 class Navbar extends Component {
   onLogoutClick = () => {
     localStorage.clear();
+    this.props.clearCurrentProfile();
     this.props.logoutUser();
   };
   render() {
@@ -55,8 +57,16 @@ class Navbar extends Component {
   }
 }
 
+Navbar.propTypes = {
+  auth: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  clearCurrentProfile: PropTypes.func.isRequired
+};
+
 const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(mapStateToProps, { logoutUser })(Navbar);
+export default connect(mapStateToProps, { logoutUser, clearCurrentProfile })(
+  Navbar
+);

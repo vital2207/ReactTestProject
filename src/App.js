@@ -14,10 +14,10 @@ import NotFound from "./components/NotFound";
 
 import "./App.css";
 
-if (localStorage.auth) {
+if (localStorage.user) {
   store.dispatch(
     loginUser({
-      name: localStorage.name,
+      email: localStorage.email,
       password: localStorage.password
     })
   );

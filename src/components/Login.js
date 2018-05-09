@@ -1,31 +1,40 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { loginUser } from "../actions/authActions";
+import Spinner from "../common/Spinner";
+import PropTypes from "prop-types";
 class Login extends Component {
   state = {
-    name: "",
-    password: ""
+    email: "",
+    password: "",
+    error: ""
   };
+
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
   onSubmit = e => {
     e.preventDefault();
     const userData = {
-      name: this.state.name,
+      email: this.state.email,
       password: this.state.password
     };
     this.props.loginUser(userData);
   };
-  // static getDerivedStateFromProps(nextProps, prevState) {
-  //
-  // }
+  componentDidMount = () => {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/profile");
+    }
+  };
   componentWillReceiveProps = nextProps => {
     if (nextProps.auth.isAuthenticated) this.props.history.push("/profile");
+    if (nextProps.auth.error)
+      this.setState({ error: nextProps.auth.error, password: "" });
   };
 
   render() {
-    const { isAuthenticated, errors } = this.props.auth;
+    const { error } = this.state;
+    const { loading } = this.props.auth;
     return (
       <div className="container">
         <div className="row">
@@ -34,11 +43,11 @@ class Login extends Component {
             <form onSubmit={this.onSubmit}>
               <div className="form-group">
                 <input
-                  type="text"
-                  name="name"
+                  type="email"
+                  name="email"
                   className="form-control"
-                  placeholder="Введите логин"
-                  value={this.state.name}
+                  placeholder="Введите email"
+                  value={this.state.email}
                   onChange={this.onChange}
                 />
               </div>
@@ -52,20 +61,31 @@ class Login extends Component {
                   onChange={this.onChange}
                 />
               </div>
-
-              <input
-                type="submit"
-                onSubmit={this.onSubmit}
-                className="btn btn-info btn-block mt-4"
-              />
+              {error && (
+                <div>Имя пользователя или пароль введены не верно.</div>
+              )}
+              {loading ? (
+                <Spinner />
+              ) : (
+                <input
+                  type="submit"
+                  onSubmit={this.onSubmit}
+                  className="btn btn-info btn-block mt-4"
+                />
+              )}
             </form>
-            {/* {errors && <div>{errors}</div>} */}
           </div>
         </div>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired
+};
+
 const mapStateToProps = state => ({
   auth: state.auth
 });

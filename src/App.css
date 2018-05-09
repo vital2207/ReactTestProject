@@ -2,8 +2,6 @@
   text-align: center;
 }
 
-
-
 .App-header {
   background-color: #222;
   height: 150px;
@@ -19,11 +17,7 @@
   font-size: large;
 }
 
-.active{
-  color: red;
-}
-
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.fab {
+  font-size: 2rem;
+  color: black;
 }

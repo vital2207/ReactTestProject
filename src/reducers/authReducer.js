@@ -1,14 +1,15 @@
 import {
   AUTHORIZATION_SUCCESS,
+  AUTHORIZATION_PENDING,
   AUTHORIZATION_FAIL,
-  SIGN_OUT,
-  GET_CURRENT_USER
+  SIGN_OUT
 } from "../actions/types";
 
 const initialState = {
   isAuthenticated: false,
   user: {},
-  errors: {}
+  loading: false,
+  error: ""
 };
 
 export default function(state = initialState, action) {
@@ -17,23 +18,27 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isAuthenticated: true,
-        user: action.payload
+        user: action.payload,
+        loading: false,
+        error: ""
+      };
+    case AUTHORIZATION_PENDING:
+      return {
+        ...state,
+        loading: true
       };
     case AUTHORIZATION_FAIL:
       return {
         ...state,
-        errors: action.payload
-      };
-    case GET_CURRENT_USER:
-      return {
-        ...state,
-        user: action.payload
+        loading: false,
+        error: action.payload
       };
     case SIGN_OUT:
       return {
         ...state,
         isAuthenticated: false,
-        user: {}
+        user: {},
+        error: ""
       };
     default:
       return state;
